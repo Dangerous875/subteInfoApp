@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Subway status</string>
+    <string name="estado">Estado</string>
+    <string name="Normal">Normal</string>
+</resources>

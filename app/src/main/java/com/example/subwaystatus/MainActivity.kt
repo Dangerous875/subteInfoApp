@@ -19,6 +19,7 @@ import com.example.subwaystatus.data.Alerts
 import com.example.subwaystatus.data.Keys
 import com.example.subwaystatus.data.SubwayResponse
 import com.example.subwaystatus.databinding.ActivityMainBinding
+import com.example.subwaystatus.service.NetworkUtils
 import com.example.subwaystatus.service.SubwayService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +78,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        updateDate()
-        getCurrentsSubwayAlerts()
+        val isConnected = NetworkUtils.isInternetAvailable(applicationContext)
+        if (isConnected){
+            updateDate()
+            getCurrentsSubwayAlerts()
+        }else{
+            setValuesOffline()
+        }
+    }
+
+    private fun setValuesOffline() {
+        updateDataDefaultOffline(binding.cardLineaA,binding.tvLineaA)
+        updateDataDefaultOffline(binding.cardLineaB,binding.tvLineaB)
+        updateDataDefaultOffline(binding.cardLineaC,binding.tvLineaC)
+        updateDataDefaultOffline(binding.cardLineaD,binding.tvLineaD)
+        updateDataDefaultOffline(binding.cardLineaE,binding.tvLineaE)
+        updateDataDefaultOffline(binding.cardLineaH,binding.tvLineaH)
+        updateDataDefaultOffline(binding.cardLineaP,binding.tvLineaP)
+    }
+
+    private fun updateDataDefaultOffline(card: CardView, tvLinea: TextView) {
+        card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.offline))
+        tvLinea.text = getString(R.string.offline)
+        tvLinea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26f)
     }
 
     private fun updateDate() {
@@ -179,6 +202,7 @@ class MainActivity : AppCompatActivity() {
     private fun showExitConfirmation() {
         val message = getString(R.string.exit_app_message)
         val alert = AlertDialog.Builder(this)
+
             alert.setTitle(getString(R.string.exit_tittle))
             .setMessage(message)
                 .setPositiveButton(getString(R.string.si)){ _, _ ->

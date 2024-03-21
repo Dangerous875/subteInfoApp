@@ -6,4 +6,5 @@
     <color name="statusBad">#D61A1A</color>
     <color name="statusColor">#252323</color>
     <color name="icon_color">#000000</color>
+    <color name="offline">#4C4D4E</color>
 </resources>

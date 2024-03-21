@@ -1,9 +1,15 @@
 package com.example.subwaystatus
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.example.subwaystatus.data.APIService
@@ -19,7 +25,11 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Calendar
 import java.util.Collections
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -67,13 +77,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        updateDate()
         getCurrentsSubwayAlerts()
+    }
+
+    private fun updateDate() {
+        val calendar = Calendar.getInstance()
+//            val formato = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val formato = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val hora = formato.format(calendar.time)
+        supportActionBar?.title = "Actualización: $hora hs"
     }
 
 
     private fun applyAlerts() {
         Log.i("respuesta", SubwayService.subwayList.toString())
         val alerts = SubwayService.subwayList
+        setValueDefault()
         for (alert in alerts) {
             when (alert.id) {
                 Keys.keyLineaA -> {
@@ -108,15 +128,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setValueDefault() {
+        updateDataDefault(binding.cardLineaA,binding.tvLineaA)
+        updateDataDefault(binding.cardLineaB,binding.tvLineaB)
+        updateDataDefault(binding.cardLineaC,binding.tvLineaC)
+        updateDataDefault(binding.cardLineaD,binding.tvLineaD)
+        updateDataDefault(binding.cardLineaE,binding.tvLineaE)
+        updateDataDefault(binding.cardLineaH,binding.tvLineaH)
+        updateDataDefault(binding.cardLineaP,binding.tvLineaP)
+    }
+
 
     private fun updateDataAlert(card: CardView, tvLinea: TextView, alert: Alerts) {
         card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.statusBad))
         tvLinea.text = alert.alert.description.translation[0].text
+        tvLinea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
     }
 
-    private fun updateDataDefault(card: CardView, tvLinea: TextView, alert: Alerts) {
+    private fun updateDataDefault(card: CardView, tvLinea: TextView) {
         card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.statusNormal))
         tvLinea.text = getString(R.string.Normal)
+        tvLinea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26f)
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_activity,menu)
+        if (menu is MenuBuilder){
+            menu.setOptionalIconsVisible(true)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.item_update -> {
+                initUI()
+                return true
+            }
+            R.id.item_map -> {
+                return true
+            }
+            R.id.item_exit -> {
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 

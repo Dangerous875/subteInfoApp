@@ -5,4 +5,5 @@
     <color name="statusNormal">#16B11D</color>
     <color name="statusBad">#D61A1A</color>
     <color name="statusColor">#252323</color>
+    <color name="icon_color">#000000</color>
 </resources>

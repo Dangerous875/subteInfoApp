@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.item_map -> {
-                startActivity(Intent(this,FragmentContainerActivity::class.java))
+                startActivity(Intent(this,MainActivity2::class.java))
                 return true
             }
             R.id.item_exit -> {

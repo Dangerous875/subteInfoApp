@@ -15,6 +15,10 @@ class MainActivity2 : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.actionbar_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        Glide.with(this)
+            .load(R.drawable.iv_subte)
+            .into(binding.imageSub)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateDataAlert(card: CardView, tvLinea: TextView, alert: Alerts) {
         card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.statusBad))
         tvLinea.text = alert.alert.description.translation[0].text
-        tvLinea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        tvLinea.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
     }
 
     private fun updateDataDefault(card: CardView, tvLinea: TextView) {
@@ -188,7 +188,8 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.item_map -> {
-                startActivity(Intent(this,MainActivity2::class.java))
+                val intent = Intent(this,MainActivity2::class.java)
+                startActivity(intent)
                 return true
             }
             R.id.item_exit -> {

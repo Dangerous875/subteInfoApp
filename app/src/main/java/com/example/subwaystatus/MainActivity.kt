@@ -1,14 +1,16 @@
 package com.example.subwaystatus
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.KeyEvent
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -26,7 +28,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Collections
 import java.util.Locale
@@ -57,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         if (call.isSuccessful) {
             val newlist: List<Alerts>? = newListAlerts?.subwayAlerts
             if (newlist != null) {
-//                val subwayResponse = call.body()?.subwayAlerts ?: emptyList()
-//                Log.i("respuesta",subwayResponse.toString())
                 SubwayService.subwayList = Collections.emptyList()
                 SubwayService.subwayList = newlist
 
@@ -83,7 +82,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDate() {
         val calendar = Calendar.getInstance()
-//            val formato = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
         val formato = SimpleDateFormat("HH:mm", Locale.getDefault())
         val hora = formato.format(calendar.time)
         supportActionBar?.title = "Actualización: $hora hs"
@@ -167,13 +165,36 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.item_map -> {
+                startActivity(Intent(this,FragmentContainerActivity::class.java))
                 return true
             }
             R.id.item_exit -> {
+                showExitConfirmation()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showExitConfirmation() {
+        val message = getString(R.string.exit_app_message)
+        val alert = AlertDialog.Builder(this)
+            alert.setTitle(getString(R.string.exit_tittle))
+            .setMessage(message)
+                .setPositiveButton(getString(R.string.si)){ _, _ ->
+                    finishAffinity()
+                }
+                .setNegativeButton(getString(R.string.no),null)
+                .show()
+
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            showExitConfirmation()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
 

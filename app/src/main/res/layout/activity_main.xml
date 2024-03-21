@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLineaA"
         android:layout_width="match_parent"
